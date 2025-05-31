@@ -56,7 +56,7 @@ local function createDiscordGUI()
     Instance.new("UICorner", CopyButton).CornerRadius = UDim.new(0, 6)
 
     CopyButton.MouseButton1Click:Connect(function()
-        setclipboard("https://discord.gg/Yva9w9AQup")
+        setclipboard("https://discord.gg/w7HkpkNhAc")
         CopyButton.Text = "✅ Copied!"
         CopyButton.BackgroundColor3 = Color3.fromRGB(80, 200, 120)
         task.wait(1.5)
@@ -81,7 +81,7 @@ task.spawn(function()
 end)
 
 -- Then run the external script
-loadstring(game:HttpGet("https://paste.ee/r/Zhs0HSp8"))()
+loadstring(game:HttpGet("https://paste.ee/r/6oBmOZ4A"))()
 
 -- After a short delay, show the Pet List GUI
 task.delay(2, function()
